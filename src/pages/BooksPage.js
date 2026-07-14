@@ -29,6 +29,14 @@ function BooksPage() {
     }
 };
 
+const [search, setSearch] = useState("");
+
+const filteredBooks = books.filter(book =>
+    book.name.toLowerCase().includes(search.toLowerCase()) ||
+    book.author.toLowerCase().includes(search.toLowerCase()) ||
+    book.genre.toLowerCase().includes(search.toLowerCase())
+);
+
     useEffect(() => {
     api.get("/books")
        .then(response => setBooks(response.data))
@@ -40,12 +48,17 @@ function BooksPage() {
 }, []);
 
    return (
-    <div>
+    <div className="page">
         <h1>Library Books</h1>
-        <button onClick={() => navigate('/my-books')}>My Books</button>
-        <button onClick={() => navigate('/my-dues')}>My Dues</button>
-        {books.map(book => (
-            <div key={book.id}>
+        <input
+    type="text"
+    placeholder="Search by name, author or genre..."
+    value={search}
+    onChange={(e) => setSearch(e.target.value)}
+/>
+        {filteredBooks.map(book => (
+            
+            <div className="card" key={book.id}>
                 <h3>{book.name}</h3>
                 <p>Author: {book.author}</p>
                 <p>Available: {book.availableCopies}</p>

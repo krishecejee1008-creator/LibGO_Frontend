@@ -1,6 +1,7 @@
 import { useState } from "react";
 import api from '../api';
 import { useNavigate } from "react-router-dom";
+import bgImage from "../assets/LibGO_homePage_bg.jpeg";
 
 function LoginPage() {
     const navigate = useNavigate();
@@ -11,58 +12,62 @@ function LoginPage() {
     const [error, setError] = useState("");
 
     const handleLogin = async () => {
-    try {
-        if (mode === "regular") {
-            const response = await api.post("/user/login", {
-                collageEmailId: email,
-                password: password
-            });
-            localStorage.setItem("token", response.data);
-            navigate("/books");
+        try {
+            if (mode === "regular") {
+                const response = await api.post("/user/login", {
+                    collageEmailId: email,
+                    password: password
+                });
+                localStorage.setItem("token", response.data);
+                navigate("/books");
+            }
+        } catch (err) {
+            setError("Invalid email or password");
         }
-    } catch (err) {
-        setError("Invalid email or password");
-    }
-};
+    };
 
     return (
-        <div>
-            <h1>LibGO Login</h1>
+        <div className="login-page-wrapper" style={{ backgroundImage: `url(${bgImage})` }}>
+            <div className="login-container">
+                <h1>Login</h1>
 
-<button onClick={() => setMode("regular")}>Regular Login</button>
-<button onClick={() => setMode("newAdmission")}>New Admission</button>
-{mode === "regular" && (
-    <div>
-        <input 
-            type="email" 
-            placeholder="College Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-        />
-    </div>
-)}
+                <div className="mode-buttons">
+                    <button onClick={() => setMode("regular")}>Regular Login</button>
+                    <button onClick={() => setMode("newAdmission")}>New Admission</button>
+                </div>
 
-{mode === "newAdmission" && (
-    <div>
-        <input 
-            type="number" 
-            placeholder="JEE Application Number"
-            value={applicationNumber}
-            onChange={(e) => setApplicationNumber(e.target.value)}
-        />
-    </div>
-)}
+                {mode === "regular" && (
+                    <div>
+                        <input 
+                            type="email" 
+                            placeholder="College Email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                    </div>
+                )}
 
-<input 
-    type="password" 
-    placeholder="Password"
-    value={password}
-    onChange={(e) => setPassword(e.target.value)}
-/>
+                {mode === "newAdmission" && (
+                    <div>
+                        <input 
+                            type="number" 
+                            placeholder="JEE Application Number"
+                            value={applicationNumber}
+                            onChange={(e) => setApplicationNumber(e.target.value)}
+                        />
+                    </div>
+                )}
 
-<button onClick={handleLogin}>Login</button>
-{error && <p style={{color: "red"}}>{error}</p>}
-    
+                <input 
+                    type="password" 
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                />
+
+                <button className="submit-btn" onClick={handleLogin}>Login</button>
+                {error && <p style={{color: "red", marginTop: "10px"}}>{error}</p>}
+            </div>
         </div>
     );
 }

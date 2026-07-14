@@ -4,10 +4,12 @@ import BooksPage from './pages/BooksPage';
 import MyBooksPage from './pages/MyBooksPage';
 import MyDuesPage from './pages/MyDuesPage';
 import AdminPage from './pages/AdminPage';
+import Navbar from './components/Navbar';
 
 function App() {
   return (
     <BrowserRouter>
+      <Navbar />
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/" element={<LoginPage />} />

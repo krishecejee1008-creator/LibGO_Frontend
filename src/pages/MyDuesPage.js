@@ -20,20 +20,20 @@ function MyDuesPage() {
      }, []);
 
     return (
-    <div>
+    <div className="page">
         <h2>My Dues</h2>
         {myDues.length === 0 ? (
             <p>No dues! You're all clear. ✅</p>
         ) : (
-            <ul>
+            <div>
                 {myDues.map((due) => (
-                    <li key={due.id}>
+                    <div className="card" key={due.id}>
                         <strong>{due.overDue.bookIssued.name}</strong>
                         <p>Overdue since: {new Date(due.overDueDate).toLocaleDateString()}</p>
                         <p>Status: {due.clearedByAdmin ? "Cleared" : "Pending return"}</p>
-                    </li>
+                    </div>
                 ))}
-            </ul>
+            </div>
         )}
     </div>
 );
