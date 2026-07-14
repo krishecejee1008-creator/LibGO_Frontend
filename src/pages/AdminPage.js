@@ -5,12 +5,12 @@ import { useNavigate } from "react-router-dom";
 
 function AdminPage() {
     const [activeIssues, setActiveIssues] = useState([]);
-    const [pendingIssues, setPendingIssues] = useState([]);
+
     const [dues, setDues] = useState([]);
     const navigate = useNavigate();
     const token = localStorage.getItem("token");
     const roles = token ? jwtDecode(token).roles : null;
-    const userEmail = token ? jwtDecode(token).sub : null;
+
     const [searchQuery, setSearchQuery] = useState("");
     const [searchType, setSearchType] = useState("name");
     const [foundUser, setFoundUser] = useState(null);
@@ -37,9 +37,7 @@ function AdminPage() {
         userType: "STUDENT"
     });
 
-
-    const [user, setUser] = useState(null);
-
+    // eslint-disable-next-line
     useEffect(() => {
         if (roles !== "ADMIN") {
             navigate("/books");
