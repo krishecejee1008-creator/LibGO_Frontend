@@ -46,10 +46,6 @@ function AdminPage() {
             .then(response => setActiveIssues(response.data))
             .catch(err => console.log(err));
 
-        api.get("/admin/issues/pending")
-            .then(response => setPendingIssues(response.data))
-            .catch(err => console.log(err));
-
         api.get("/admin/issues/dues")
             .then(response => setDues(response.data))
             .catch(err => console.log(err));

@@ -8,8 +8,6 @@ function BooksPage() {
     const token = localStorage.getItem("token");
     const decoded = jwtDecode(token);
     const userEmail = decoded.sub;
-    const navigate = useNavigate();
-
 
     const [user, setUser] = useState(null);
 
@@ -37,6 +35,7 @@ const filteredBooks = books.filter(book =>
     book.genre.toLowerCase().includes(search.toLowerCase())
 );
 
+    // eslint-disable-next-line
     useEffect(() => {
     api.get("/books")
        .then(response => setBooks(response.data))

@@ -10,6 +10,7 @@ function MyBooksPage() {
 
     const [user, setUser] = useState(null);
 
+    // eslint-disable-next-line
     useEffect(() => {
         api.get(`/user/me?email=${encodeURIComponent(userEmail)}`)
             .then(response => {

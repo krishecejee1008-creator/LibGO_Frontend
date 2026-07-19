@@ -8,8 +8,7 @@ function MyDuesPage() {
     const decoded = jwtDecode(token);    
     const userEmail = decoded.sub;
 
-    const [user, setUser] = useState(null);
-
+    // eslint-disable-next-line
     useEffect(() => {
     api.get(`/user/me?email=${encodeURIComponent(userEmail)}`)
        .then(response => {
