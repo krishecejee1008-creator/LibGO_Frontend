@@ -7,16 +7,25 @@ function MyDuesPage() {
     const token = localStorage.getItem("token");
     const decoded = jwtDecode(token);    
     const userEmail = decoded.sub;
-
+    
     // eslint-disable-next-line
     useEffect(() => {
     api.get(`/user/me?email=${encodeURIComponent(userEmail)}`)
        .then(response => {
-           setUser(response.data);
         return api.get(`/user/myDues?userID=${response.data.id}`);       })
        .then(response => setMyDues(response.data))
        .catch(err => console.log(err));
      }, []);
+
+     // eslint-disable-next-line
+useEffect(() => {
+    api.get(`/user/me?email=${encodeURIComponent(userEmail)}`)
+       .then(response => {
+           return api.get(`/user/myDues?userID=${response.data.id}`);
+       })
+       .then(response => setMyDues(response.data))
+       .catch(err => console.log(err));
+}, []);
 
     return (
     <div className="page">
