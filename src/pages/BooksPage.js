@@ -14,19 +14,23 @@ function BooksPage() {
     const navigate = useNavigate();
 
     const handleIssue = async (bookId) => {
-        if (!user) {
-            alert("Please wait, loading user data...");
-            return;
-        }
+        if (!user) { alert("Please wait, loading user data..."); return; }
         try {
-            await api.post("/issue/issueHere", {
-                userId: user.id,
-                bookId: bookId
-            });
+            await api.post("/issue/issueHere", { userId: user.id, bookId: bookId });
             alert("Book issued successfully! Visit library within 4 days to collect.");
             setSelectedBook(null);
         } catch (err) {
             alert("Could not issue book: " + (err.response?.data || err.message));
+        }
+    };
+
+    const handleAddToCart = async (bookId) => {
+        if (!user) { alert("Please wait, loading user data..."); return; }
+        try {
+            await api.post("/cart/add", { userId: user.id, bookId: bookId });
+            alert("Book added to cart! 🛒");
+        } catch (err) {
+            alert("Could not add to cart: " + (err.response?.data || err.message));
         }
     };
 
@@ -41,7 +45,6 @@ function BooksPage() {
         api.get("/books")
             .then(response => setBooks(response.data))
             .catch(err => console.log(err));
-
         api.get(`/user/me?email=${encodeURIComponent(userEmail)}`)
             .then(response => setUser(response.data))
             .catch(err => console.log(err));
@@ -50,46 +53,59 @@ function BooksPage() {
     return (
         <div className="page">
             <h1>Library Books</h1>
-            <input
-                type="text"
-                placeholder="Search by name, author or genre..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-            />
+            <input type="text" placeholder="Search by name, author or genre..."
+                value={search} onChange={(e) => setSearch(e.target.value)} />
+
+            {filteredBooks.length === 0 && (
+                <div style={{textAlign: 'center', padding: '40px', color: '#6b4c35'}}>
+                    <p style={{fontSize: '2rem'}}>📚</p>
+                    <p style={{fontSize: '1.1rem', fontWeight: 'bold'}}>No books found in our collection</p>
+                    <p style={{fontStyle: 'italic', fontSize: '0.9rem'}}>
+                        Try searching by a different name, author or genre.
+                    </p>
+                </div>
+            )}
 
             {filteredBooks.map(book => (
-               <div className="card" key={book.id}>
-    <div style={{display: 'flex', gap: '15px'}}>
-        {book.coverImageUrl && (
-            <img src={book.coverImageUrl} alt={book.name}
-                 style={{width: '80px', height: '110px', objectFit: 'cover', borderRadius: '4px', flexShrink: 0}} />
-        )}
-        <div style={{flex: 1}}>
-            <h3 style={{margin: '0 0 5px 0'}}>{book.name}</h3>
-            <p style={{margin: '2px 0'}}><strong>Author:</strong> {book.author}</p>
-            <p style={{margin: '2px 0'}}><strong>Genre:</strong> {book.genre}</p>
-            <p style={{margin: '2px 0'}}><strong>Available:</strong> {book.availableCopies}</p>
-            {book.description && (
-                <p style={{margin: '5px 0', color: '#6b4c35', fontStyle: 'italic', fontSize: '0.9rem'}}>
-                    {book.description.substring(0, 80)}...
-                </p>
-            )}
-            {book.authorBio && (
-                <p style={{margin: '2px 0', fontSize: '0.85rem', color: '#8b6555'}}>
-                    <strong>About Author:</strong> {book.authorBio.substring(0, 60)}...
-                </p>
-            )}
-            {book.authorImageUrl && (
-                <img src={book.authorImageUrl} alt={book.author}
-                     style={{width: '35px', height: '35px', borderRadius: '50%', objectFit: 'cover', marginTop: '5px'}} />
-            )}
-        </div>
-    </div>
-    <div style={{display: 'flex', gap: '10px', marginTop: '10px'}}>
-        <button onClick={() => setSelectedBook(book)}>See More</button>
-        <button onClick={() => handleIssue(book.id)}>Issue</button>
-    </div>
-</div>
+                <div className="card" key={book.id}>
+                    <div style={{display: 'flex', gap: '15px'}}>
+                        {book.coverImageUrl && (
+                            <img src={book.coverImageUrl} alt={book.name}
+                                 style={{width: '80px', height: '110px', objectFit: 'cover', borderRadius: '4px', flexShrink: 0}} />
+                        )}
+                        <div style={{flex: 1}}>
+                            <h3 style={{margin: '0 0 5px 0'}}>{book.name}</h3>
+                            <p style={{margin: '2px 0'}}><strong>Author:</strong> {book.author}</p>
+                            <p style={{margin: '2px 0'}}><strong>Genre:</strong> {book.genre}</p>
+                            <p style={{margin: '2px 0'}}><strong>Available:</strong> {book.availableCopies}</p>
+                            {book.description && (
+                                <p style={{margin: '5px 0', color: '#6b4c35', fontStyle: 'italic', fontSize: '0.9rem'}}>
+                                    {book.description.substring(0, 80)}...
+                                </p>
+                            )}
+                            {book.authorBio && (
+                                <p style={{margin: '2px 0', fontSize: '0.85rem', color: '#8b6555'}}>
+                                    <strong>About Author:</strong> {book.authorBio.substring(0, 60)}...
+                                </p>
+                            )}
+                            {book.authorImageUrl && (
+                                <img src={book.authorImageUrl} alt={book.author}
+                                     style={{width: '35px', height: '35px', borderRadius: '50%', objectFit: 'cover', marginTop: '5px'}} />
+                            )}
+                        </div>
+                    </div>
+                    {book.availableCopies === 0 ? (
+                        <p style={{color: '#8b0000', fontStyle: 'italic', marginTop: '10px', fontSize: '0.9rem'}}>
+                            📖 All copies are currently checked out. Check back soon!
+                        </p>
+                    ) : (
+                        <div style={{display: 'flex', gap: '10px', marginTop: '10px'}}>
+                            <button onClick={() => setSelectedBook(book)}>See More</button>
+                            <button onClick={() => handleAddToCart(book.id)}>🛒 Add to Cart</button>
+                            <button onClick={() => handleIssue(book.id)}>Issue</button>
+                        </div>
+                    )}
+                </div>
             ))}
 
             {selectedBook && (
@@ -126,10 +142,17 @@ function BooksPage() {
                                 <p>{selectedBook.authorBio}</p>
                             </div>
                         )}
-                        <div style={{display: 'flex', gap: '10px', marginTop: '20px'}}>
-                            <button onClick={() => handleIssue(selectedBook.id)}>Issue Book</button>
-                            <button onClick={() => setSelectedBook(null)}>Close</button>
-                        </div>
+                        {selectedBook.availableCopies === 0 ? (
+                            <p style={{color: '#8b0000', fontStyle: 'italic', marginTop: '20px'}}>
+                                📖 All copies are currently checked out. Check back soon!
+                            </p>
+                        ) : (
+                            <div style={{display: 'flex', gap: '10px', marginTop: '20px'}}>
+                                <button onClick={() => handleAddToCart(selectedBook.id)}>🛒 Add to Cart</button>
+                                <button onClick={() => handleIssue(selectedBook.id)}>Issue Book</button>
+                            </div>
+                        )}
+                        <button onClick={() => setSelectedBook(null)} style={{marginTop: '10px'}}>Close</button>
                     </div>
                 </div>
             )}

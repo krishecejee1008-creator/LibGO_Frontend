@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'https://libgo-production.up.railway.app'
+    baseURL: 'http://localhost:8080'
 });
 
 api.interceptors.request.use((config) => {
