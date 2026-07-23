@@ -22,6 +22,7 @@ function Navbar() {
             {token && <button onClick={() => navigate("/my-books")}>My Books</button>}
             {token && <button onClick={() => navigate("/my-dues")}>My Dues</button>}
             {token && <button onClick={() => navigate("/cart")}>🛒Cart</button>}
+            {token && <button onClick={() => navigate("/profile")}>👤 Profile</button>}
             {role === "ADMIN" && <button onClick={() => navigate("/admin")}>Admin</button>}
             {token && <button onClick={handleLogout}>Logout</button>}
         </nav>

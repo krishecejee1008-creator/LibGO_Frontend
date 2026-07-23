@@ -84,7 +84,7 @@ function AdminPage() {
 
     const handleCollect = async (userId, bookId) => {
         try {
-            await api.put("/issue/collect", { userId, bookId });
+           await api.put("/admin/issues/collect", { userId, bookId });
             alert("Book marked as collected!");
             const issuesResponse = await api.get(`/user/myBooks?userId=${userId}`);
             setUserIssues(issuesResponse.data);
@@ -417,7 +417,7 @@ function AdminPage() {
                 {activeIssues.map(issue => (
                     <div className="card" key={issue.id}>
                         <strong>{issue.bookIssued.name}</strong>
-                        <p>Issued to: {issue.issuer.firstName}</p>
+                       <p>Issued to: {issue.issuer.firstName || issue.issuer.collageEmailID}</p>
                         <p>Due Date: {new Date(issue.dueDate).toLocaleDateString()}</p>
                     </div>
                 ))}

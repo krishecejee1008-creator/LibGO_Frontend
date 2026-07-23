@@ -5,6 +5,8 @@ import MyBooksPage from './pages/MyBooksPage';
 import MyDuesPage from './pages/MyDuesPage';
 import AdminPage from './pages/AdminPage';
 import Navbar from './components/Navbar';
+import CartPage from './pages/CartPage';
+import ProfilePage from './pages/ProfilePage';
 
 function App() {
   return (
@@ -17,6 +19,8 @@ function App() {
         <Route path="/my-books" element={<MyBooksPage />} />
         <Route path="/my-dues" element={<MyDuesPage />} />
         <Route path="/admin" element={<AdminPage />} />
+        <Route path="/cart" element={<CartPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
       </Routes>
     </BrowserRouter>
   );
